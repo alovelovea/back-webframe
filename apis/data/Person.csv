@@ -1,0 +1,4 @@
+user_id,name,password_2,address,is_vegan
+minjae01,박민재,1234,서울특별시 성북구 삼선교로 116,False
+hansuk02,신한석,5678,서울특별시 강남구 테헤란로 25,True
+minsuo03,민수,1111,서울특별시 강남구 테헤란로 1,False

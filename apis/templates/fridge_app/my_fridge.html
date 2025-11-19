@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ person.name }}님의 냉장고</title>
+    <style>
+        body { font-family: sans-serif; margin: 30px; }
+        h1 { color: #2d6cdf; }
+        table { width: 60%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background: #f4f4f4; }
+        .btn { padding: 6px 10px; border: none; border-radius: 6px; cursor: pointer; }
+        .add-btn { background: #4CAF50; color: white; }
+        .del-btn { background: #e53935; color: white; }
+        .like-btn { background: #ff9800; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🥬 {{ person.name }}님의 냉장고</h1>
+
+    <h2>냉장고 재료</h2>
+    <table>
+        <tr>
+            <th>재료</th><th>수량</th><th>유통기한</th><th>삭제</th>
+        </tr>
+        {% for item in fridge_items %}
+        <tr>
+            <td>{{ item.ingredient.ingredient_name }}</td>
+            <td>{{ item.f_quantity }}</td>
+            <td>{{ item.exdate }}</td>
+            <td><a href="{% url 'delete_ingredient' item.fridge_id %}" class="btn del-btn">삭제</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post" action="{% url 'add_ingredient' %}">
+        {% csrf_token %}
+        <label>재료 이름: <input type="text" name="ingredient" required></label>
+        <label>수량: <input type="number" name="quantity" step="0.1" required></label>
+        <label>유통기한: <input type="date" name="exdate" required></label>
+        <button type="submit" class="btn add-btn">추가</button>
+    </form>
+
+    <hr>
+    <h2>❤️ 좋아요한 레시피</h2>
+    <table>
+        <tr>
+            <th>레시피 이름</th><th>카테고리</th><th>좋아요 취소</th>
+        </tr>
+        {% for recipe in liked_recipes %}
+        <tr>
+            <td>{{ recipe.recipe_name }}</td>
+            <td>{{ recipe.recipe_category }}</td>
+            <td><a href="{% url 'toggle_like' recipe.recipe_id %}" class="btn like-btn">좋아요 취소</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">좋아요한 레시피가 없습니다.</td></tr>
+        {% endfor %}
+    </table>
+    <hr>
+<h2>🧠 이미지로 자동 인식 (LLM)</h2>
+
+<form id="llmForm" method="post" enctype="multipart/form-data" action="{% url 'classify_query' %}">
+    {% csrf_token %}
+    <input type="file" name="image" id="llmImage" accept="image/*" required>
+    <button type="submit" class="btn add-btn">이미지 분석</button>
+</form>
+
+<p id="llmStatus" style="margin-top:10px;"></p>
+
+<details style="margin-top:10px;">
+  <summary><b>LLM 분석 결과(JSON)</b></summary>
+  <pre id="llmResult" style="background:#f9f9f9; padding:12px; border:1px solid #ddd; border-radius:6px;"></pre>
+</details>
+
+<script>
+(function() {
+  const form = document.getElementById('llmForm');
+  const statusEl = document.getElementById('llmStatus');
+  const resultEl = document.getElementById('llmResult');
+
+  function getCSRFToken() {
+    const name = 'csrftoken';
+    const value = document.cookie.split('; ').find(row => row.startsWith(name + '=')); 
+    return value ? decodeURIComponent(value.split('=')[1]) : '';
+  }
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    statusEl.textContent = '분석 중...';
+    resultEl.textContent = '';
+
+    const formData = new FormData(form);
+    try {
+      const resp = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': getCSRFToken() },
+        body: formData
+      });
+      if (!resp.ok) {
+        const t = await resp.text();
+        statusEl.textContent = '오류: ' + t;
+        return;
+      }
+      // 서버에서 food_list를 문자열(JSON)로 넘기므로 문자열→객체 변환 시도
+      const data = await resp.json();
+      // data가 문자열일 경우 재파싱
+      let parsed = data;
+      if (typeof data === 'string') {
+        try { parsed = JSON.parse(data); } catch (_) {}
+      }
+      statusEl.textContent = '완료!';
+      resultEl.textContent = JSON.stringify(parsed, null, 2);
+    } catch (err) {
+      statusEl.textContent = '요청 실패: ' + err;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
