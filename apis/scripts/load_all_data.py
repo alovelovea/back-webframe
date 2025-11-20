@@ -31,6 +31,7 @@ def main():
         "load_recipeIngredient_data.py",
         "load_fridge_data.py",
         "load_like_data.py",
+        "load_shopping_data.py",
     ]
 
     for script in load_order:

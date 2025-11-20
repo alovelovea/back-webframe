@@ -27,22 +27,28 @@ with open(CSV_PATH, encoding='utf-8-sig') as file:
         user_id = row['user_id'].strip()
         ingredient_name = row['ingredient_name'].strip()
         f_quantity = float(row['f_quantity'].strip())
-        exdate_str = row['exdate'].strip()
-        exdate = datetime.strptime(exdate_str, "%Y-%m-%d").date()
+        added_date_str = row['added_date'].strip()
+
+        # added_date 문자열 → date 변환
+        added_date = datetime.strptime(added_date_str, "%Y-%m-%d").date()
 
         try:
             person = Person.objects.get(user_id=user_id)
             ingredient = Ingredient.objects.get(ingredient_name=ingredient_name)
+
+            # expiry_date는 Ingredient.shelf_life 기반으로 save()에서 자동 계산됨
             Fridge.objects.create(
                 person=person,
                 ingredient=ingredient,
                 f_quantity=f_quantity,
-                exdate=exdate
+                added_date=added_date
             )
             count += 1
-            print(f"🧊 {user_id} 냉장고 ← {ingredient_name} ({f_quantity}, {exdate}) 추가됨")
+            print(f"🧊 {user_id} 냉장고 ← {ingredient_name} ({f_quantity}, {added_date}) 추가됨")
+
         except Person.DoesNotExist:
             print(f"⚠️ 사용자 '{user_id}'를 찾을 수 없습니다.")
+
         except Ingredient.DoesNotExist:
             print(f"⚠️ 재료 '{ingredient_name}'를 찾을 수 없습니다.")
 
