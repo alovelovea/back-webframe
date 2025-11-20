@@ -72,7 +72,7 @@ python apis/scripts/load_all_data.py
 7. RecipeIngredient  
 8. Fridge  
 9. Like  
-
+10. Shopping
 ---
 
 ## 🚀 6. 서버 실행
@@ -87,7 +87,7 @@ python manage.py runserver
 
 ---
 
-## 🔑 7. 관리자(Admin) 계정 생성 (선택)
+## 🔑 7. 관리자(Admin) 계정 생성 (선택) id, pw 설정 후 사용. 데이터베이스 보기 좋음
 
 ```bash
 python manage.py createsuperuser
