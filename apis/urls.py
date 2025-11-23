@@ -7,20 +7,24 @@ from .views import (
     add_ingredient,
     delete_ingredient,
     toggle_like,
-    fridge_items_api
+    fridge_items_api,
+    recipe_list_api,   
+    add_recipe,
+    ingredient_list
 )
 
 urlpatterns = [
-    # ✅ React 로그인 요청용 (POST: /api/login/)
     path('login/', login_user, name='login_user'),
-    # React 회원가입
     path('signup/', signup_user, name='signup_user'),
     path('fridge_items/', fridge_items_api, name='fridge_items_api'),
-
-    # ✅ GPT 이미지 분석용 (HTML 폼에서 {% url 'classify_query' %}와 매칭)
     path('classify/', classify_query_view, name='classify_query'),
 
-    # ✅ 냉장고 관련 API
+    # 🔥 레시피 리스트 + 레시피 추가 API 등록
+    path('recipes/', recipe_list_api, name='recipe_list_api'),
+    path('add_recipe/', add_recipe, name='add_recipe'),
+    path('ingredients/', ingredient_list, name='ingredient_list'),
+
+    # 냉장고 기능
     path('my_fridge/', my_fridge, name='my_fridge'),
     path('add_ingredient/', add_ingredient, name='add_ingredient'),
     path('delete_ingredient/<int:fridge_id>/', delete_ingredient, name='delete_ingredient'),
