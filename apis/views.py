@@ -305,3 +305,32 @@ def add_recipe(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+# ============================
+# 🔥 레시피 상세 조회 API (추가)
+# ============================
+@api_view(['GET'])
+def recipe_detail_api(request, recipe_id):
+    try:
+        recipe = Recipe.objects.get(recipe_id=recipe_id)
+
+        # 재료 목록 가져오기
+        ing_list = RecipeIngredient.objects.filter(recipe=recipe)
+        ingredients_list = [
+            f"{ri.ingredient.ingredient_name} {float(ri.r_quantity)}{ri.ingredient.unit}"
+            for ri in ing_list
+        ]
+
+        data = {
+            "id": recipe.recipe_id,
+            "name": recipe.recipe_name,
+            "image": recipe.recipe_img,
+            "category": recipe.recipe_category,
+            "description": recipe.description or "",
+            "ingredients_list": ingredients_list,
+        }
+
+        return JsonResponse(data, status=200)
+
+    except Recipe.DoesNotExist:
+        return JsonResponse({"error": "레시피를 찾을 수 없습니다."}, status=404)
