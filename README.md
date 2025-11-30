@@ -25,6 +25,7 @@ source venv/bin/activate
 ---
 
 ### 1-2. 필요한 패키지 설치
+통합 스크립트를 실행하면 모든 CSV 데이터가 DB에 자동으로 로드됩니다.
 
 ```bash
 pip install -r requirements.txt
