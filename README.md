@@ -8,10 +8,21 @@
 
 ### 1-1. 가상환경 생성 및 활성화 (최상위 디렉토리에서 실행)
 
+### 🔹 Windows
+
 ```bash
 python -m venv venv
 .\venv\Scripts\activate
 ```
+
+### 🔹 Mac / Linux
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+---
 
 ### 1-2. 필요한 패키지 설치
 
