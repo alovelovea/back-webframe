@@ -5,7 +5,7 @@
 ---
 
 ## 1. 백엔드 실행 (필수)
-
+---
 ### 1-1. 가상환경 생성 및 활성화 (최상위 디렉토리 기준)
 
 ```bash
@@ -37,7 +37,10 @@ python apis/scripts/load_all_data.py
 ```bash
 python manage.py runserver
 ```
-##  React 실행
+---
+## 2.React 실행
+---
+### 2-1. client 폴더로 이동 후 실행
 
 ```bash
 npm install
