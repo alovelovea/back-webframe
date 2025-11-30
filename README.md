@@ -39,7 +39,7 @@ python manage.py runserver
 ```
 ---
 
-## 2.React 실행
+## 2. React 실행
 
 ### 2-1. client 폴더로 이동 후 실행
 
